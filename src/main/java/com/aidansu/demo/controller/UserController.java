@@ -56,12 +56,10 @@ public class UserController {
      *
      * @param modelMap
      * @param request
-     * @return
      */
     @RequestMapping(value="/registering" ,method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String registering(HttpServletRequest request,ModelMap modelMap){
-
         // 获取传递过来的参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -119,15 +117,10 @@ public class UserController {
 
     /**
      * 用户登录
-     *
-     * @param modelMap
-     * @param request
-     * @return
      */
     @RequestMapping(value="/logining" ,method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
     public String logining(HttpServletRequest request,ModelMap modelMap){
-
         // 获取传递过来的参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -182,6 +175,9 @@ public class UserController {
         return "user-list";
     }
 
+    /**
+     * 根据id删除用户
+     */
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String goDelete(HttpServletRequest request) {
         int id = Integer.valueOf(request.getParameter("id"));
@@ -191,8 +187,6 @@ public class UserController {
 
     /**
      * 登出
-     * @param request
-     * @return
      */
     @RequestMapping(value="/logout" ,method = RequestMethod.GET)
     public String logout(HttpServletRequest request){
