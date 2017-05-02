@@ -1,19 +1,27 @@
 package com.aidansu.demo.model;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by aidan on 17-4-26.
  */
+@Entity
+@Table(name="t_user")
 public class User implements Serializable{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
     private String telephone;
+    @Column(name="create_time")
     private Date createTime;
+    @Column(name="last_login_time")
     private Date lastLoginTime;
+    @Column(name="update_time")
     private Date updateTime;
 
     public User() {
