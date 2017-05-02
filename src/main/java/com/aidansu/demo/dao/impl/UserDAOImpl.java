@@ -41,12 +41,12 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         this.template.update("DELETE FROM t_user WHERE id=?", id);
     }
 
     @Override
-    public User findById(int id) {
+    public User findById(long id) {
         String sql = "SELECT * FROM t_user WHERE id=?";
         return this.template.queryForObject(sql, new Object[]{id}, new UserMapper());
 

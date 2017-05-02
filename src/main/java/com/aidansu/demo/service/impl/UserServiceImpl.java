@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         userDAO.delete(id);
     }
 
     @Override
-    public User findById(int id) {
+    public User findById(long id) {
         return userDAO.findById(id);
     }
 
