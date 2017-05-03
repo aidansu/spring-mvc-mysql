@@ -5,9 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -17,6 +19,7 @@ import java.util.Properties;
  * Created by aidan on 17-4-26.
  */
 @Configuration
+@EnableJpaRepositories("com.aidansu.demo.dao")
 @PropertySource("classpath:config/application.properties")
 public class DataBaseConfig {
 
@@ -67,43 +70,48 @@ public class DataBaseConfig {
     }
 
     /**
-     * SessionFactory
+     * Configures the entity manager factory.
      *
-     * @return LocalSessionFactoryBean
+     * @return entityManagerFactoryBean.
      */
     @Bean
-    public LocalSessionFactoryBean sessionFactory(){
-        LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
-        localSessionFactoryBean.setPackagesToScan(environment.getRequiredProperty(PROPERTY_NAME_ENTITY_MANAGER_PACKAGES_TO_SCAN));
-        localSessionFactoryBean.setDataSource(dataSource());
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 
-        Properties hibernateProperties = new Properties();
-        hibernateProperties.put(PROPERTY_NAME_HIBERNATE_DIALECT, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
-        hibernateProperties.put(PROPERTY_NAME_HIBERNATE_FORMAT_SQL, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_FORMAT_SQL));
-        hibernateProperties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
-        hibernateProperties.put(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY));
-        hibernateProperties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
-        hibernateProperties.put("hibernate.connection.CharSet", "UTF-8");
-        hibernateProperties.put("hibernate.connection.characterEncoding", "UTF-8");
-        hibernateProperties.put("hibernate.connection.useUnicode", "true");
+        entityManagerFactoryBean.setDataSource(dataSource());
+        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManagerFactoryBean.setPackagesToScan(environment.getRequiredProperty(PROPERTY_NAME_ENTITY_MANAGER_PACKAGES_TO_SCAN));
 
-        localSessionFactoryBean.setHibernateProperties(hibernateProperties);
+        Properties jpaProterties = new Properties();
+        jpaProterties.put(PROPERTY_NAME_HIBERNATE_DIALECT, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
+        jpaProterties.put(PROPERTY_NAME_HIBERNATE_FORMAT_SQL, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_FORMAT_SQL));
+        jpaProterties.put(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO));
+        jpaProterties.put(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_NAMING_STRATEGY));
+        jpaProterties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
+        jpaProterties.put("hibernate.connection.CharSet", "UTF-8");
+        jpaProterties.put("hibernate.connection.characterEncoding", "UTF-8");
+        jpaProterties.put("hibernate.connection.useUnicode", "true");
 
-        return  localSessionFactoryBean;
+        entityManagerFactoryBean.setJpaProperties(jpaProterties);
+
+        return entityManagerFactoryBean;
     }
+
 
     /**
-     * TransactionManager
+     * configures the transaction manager.
      *
-     * @return HibernateTransactionManager
+     * @return transactionManager.
      */
     @Bean
-    public HibernateTransactionManager transactionManager() {
-        HibernateTransactionManager hibernateTransactionManager = new HibernateTransactionManager();
-        hibernateTransactionManager.setSessionFactory(sessionFactory().getObject());
+    public JpaTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
 
-        return hibernateTransactionManager;
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+
+        return transactionManager;
     }
+
 
 }
 

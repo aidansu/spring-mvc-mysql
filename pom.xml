@@ -20,6 +20,7 @@
     <jstl.version>1.2</jstl.version>
     <gson.version>2.5</gson.version>
     <hibernate.version>5.2.10.Final</hibernate.version>
+    <spring.jpa.version>1.11.3.RELEASE</spring.jpa.version>
   </properties>
 
   <dependencies>
@@ -129,6 +130,13 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
       <version>${hibernate.version}</version>
+    </dependency>
+
+    <!-- Spring Data JPA -->
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+      <version>${spring.jpa.version}</version>
     </dependency>
 
   </dependencies>

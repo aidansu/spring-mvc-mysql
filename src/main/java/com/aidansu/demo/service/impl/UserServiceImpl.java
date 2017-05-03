@@ -1,11 +1,11 @@
 package com.aidansu.demo.service.impl;
 
-import com.aidansu.demo.dao.UserDAO;
 import com.aidansu.demo.model.User;
+import com.aidansu.demo.dao.UserRepository;
 import com.aidansu.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -14,36 +14,39 @@ import java.util.List;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserDAO userDAO ;
+    @Resource
+    private UserRepository userRepository;
 
     @Override
     public void insert(User user) {
-        userDAO.insert(user);
+        userRepository.save(user);
     }
 
     @Override
     public void update(User user) {
-        userDAO.update(user);
+        userRepository.save(user);
     }
 
     @Override
     public void delete(long id) {
-        userDAO.delete(id);
+        User user = userRepository.findOne(id);
+        if (user != null){
+            userRepository.delete(user);
+        }
     }
 
     @Override
     public User findById(long id) {
-        return userDAO.findById(id);
+        return userRepository.findById(id);
     }
 
     @Override
     public User findByUsername(String username) {
-        return userDAO.findByUsername(username);
+        return userRepository.findByUsername(username);
     }
 
     @Override
     public List<User> findAll() {
-        return userDAO.findAll();
+        return userRepository.findAll();
     }
 }
